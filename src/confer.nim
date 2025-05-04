@@ -34,3 +34,13 @@ proc findParser[T](self: ConfigBuilder[T], mediaType: string): ConfigParser[T] =
     if mediaType in parser.mediaTypes:
       return parser
   raise newException(ConfigError, "No suitable parser found for media type: " & mediaType)
+
+proc build*[T](self: ConfigBuilder[T]): T =
+  if self.dataSources.len == 0:
+    raise newException(ConfigError, "No data sources provided")
+
+  for source in self.dataSources:
+    let rawData = source.getData(source)
+    let parser = self.findParser(rawData.mediaType)
+    let config = parser.parse(rawData.data)
+    result = self.merger(result, config)
