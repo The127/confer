@@ -57,3 +57,5 @@ include file
 proc withEnvParser*[T](self: ConfigBuilder[T], prefix = "") =
   self.withSource(newEnvSource(prefix = prefix))
   self.withParser(newEnvParser())
+
+include json
