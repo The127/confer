@@ -3,38 +3,59 @@ import unittest
 import confer
 
 suite "ConfigMerger":
-  type
-    TestConfig = object
+  type 
+    DbSettings = object
+      host: string
+      port: int
+      password: string
+    
+    Settings = object
       name: string
-      value: string
-      count: int
       enabled: bool
+      db: DbSettings
 
-  test "Basic merging with string fields":
-    let current = TestConfig(name: "original", value: "first")
-    let new = TestConfig(value: "second")
+  test "Merging nested objects":
+    let current = Settings(
+      name: "test",
+      enabled: true,
+      db: DbSettings(
+        host: "localhost",
+        port: 5432,
+        password: "secret"
+      )
+    )
+    
+    let new = Settings(
+      db: DbSettings(
+        port: 6543,  # only changing the port
+      )
+    )
+    
     let result = merger(current, new)
-
+    
     check:
-      result.name == "original"  # unchanged
-      result.value == "second"   # updated
+      result.name == "test"
+      result.enabled == true
+      result.db.host == "localhost"
+      result.db.port == 6543
+      result.db.password == "secret"
 
-  test "Merging with different field types":
-    let current = TestConfig(name: "test", count: 1, enabled: false)
-    let new = TestConfig(count: 42, enabled: true)
+  test "Merging nested objects with default values":
+    let current = Settings(
+      name: "test",
+      db: DbSettings(
+        host: "localhost",
+        port: 5432
+      )
+    )
+    
+    let new = Settings(
+      db: DbSettings()  # all defaults
+    )
+    
     let result = merger(current, new)
-
+    
     check:
-      result.name == "test"    # unchanged
-      result.count == 42       # updated
-      result.enabled == true   # updated
-
-  test "Merging with default values":
-    let current = TestConfig(name: "test", value: "hello", count: 100)
-    let new = TestConfig()  # all default values
-    let result = merger(current, new)
-
-    check:
-      result.name == "test"    # unchanged
-      result.value == "hello"  # unchanged
-      result.count == 100      # unchanged
+      result.name == "test"
+      result.db.host == "localhost"
+      result.db.port == 5432
