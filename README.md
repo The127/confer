@@ -2,7 +2,7 @@
 
 A composable and expandable configuration parser for Nim applications.
 
-⚠️ **WARNING**: This is an experimental library (v0.1.0) under active development and should NOT be used in production environments.
+⚠️ **WARNING**: This is an experimental library (v0.1.0) and just a toy project to learn nim.
 
 ## About
 
