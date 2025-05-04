@@ -43,3 +43,29 @@ suite "EnvSource":
     check not rawData.data.contains("FOO=bar")
     check rawData.data.contains("HOST=localhost")
     check rawData.data.contains("PORT=8080")
+
+type
+  TestConfig = object
+    foo*: string
+    host: string
+    port: string
+
+suite "EnvParser":
+  test "Parses environment variables into custom type":
+    let parser = newEnvParser[TestConfig]()
+    let data = """
+FOO=bar
+HOST=localhost
+PORT=8080
+"""
+    let result = parser.parse(data.strip())
+
+    check result.host == "localhost"
+    check result.foo == "bar"
+    check result.port == "8080"
+
+  test "Returns correct media types":
+    let parser = newEnvParser[TestConfig]()
+    let types = parser.mediaTypes()
+
+    check types == @["application/env"]
