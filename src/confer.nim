@@ -1,4 +1,6 @@
 type
+  ConfigError* = object of CatchableError
+
   RawData* = object
     data: string
     mediaType: string
@@ -26,3 +28,9 @@ proc withSource*[T](self: ConfigBuilder[T], source: DataSource) =
   
 proc withParser*[T](self: ConfigBuilder[T], parser: ConfigParser[T]) =
   self.parsers.add(parser)
+
+proc findParser[T](self: ConfigBuilder[T], mediaType: string): ConfigParser[T] =
+  for parser in self.parsers:
+    if mediaType in parser.mediaTypes:
+      return parser
+  raise newException(ConfigError, "No suitable parser found for media type: " & mediaType)
