@@ -2,8 +2,8 @@ type
   ConfigError* = object of CatchableError
 
   RawData* = object
-    data: string
-    mediaType: string
+    data*: string
+    mediaType*: string
 
   DataSource* = concept x
     getData(x) is RawData
@@ -44,3 +44,5 @@ proc build*[T](self: ConfigBuilder[T]): T =
     let parser = self.findParser(rawData.mediaType)
     let config = parser.parse(rawData.data)
     result = self.merger(result, config)
+
+include env
