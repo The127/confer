@@ -46,3 +46,7 @@ proc build*[T](self: ConfigBuilder[T]): T =
     result = self.merger(result, config)
 
 include env
+
+proc withEnvParser*[T](self: ConfigBuilder[T], prefix = "") =
+  self.withSource(newEnvSource(prefix = prefix))
+  self.withParser(newEnvParser())
