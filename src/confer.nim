@@ -21,3 +21,5 @@ proc newConfigBuilder*[T](merger: proc(current, new: T): T): ConfigBuilder[T] =
   result.parsers = @[]
   result.merger = merger
 
+proc withSource*[T](self: ConfigBuilder[T], source: DataSource) =
+  self.dataSources.add(source)
