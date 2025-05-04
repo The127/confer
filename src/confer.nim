@@ -1,3 +1,9 @@
+import std/os
+import std/strutils
+import std/macros
+
+include merger
+
 type
   ConfigError* = object of CatchableError
 

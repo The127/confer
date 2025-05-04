@@ -1,8 +1,3 @@
-import std/os
-import std/strutils
-import std/typetraits
-import std/macros
-
 const envMediaType = "application/env"
 
 type

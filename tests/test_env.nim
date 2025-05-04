@@ -1,4 +1,3 @@
-# tests/test_env.nim
 import unittest
 import std/os
 import std/strutils  # Add this import
