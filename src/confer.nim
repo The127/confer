@@ -14,3 +14,10 @@ type
     dataSources: seq[DataSource]
     parsers: seq[ConfigParser[T]]
     merger: proc(current, new: T): T
+
+proc newConfigBuilder*[T](merger: proc(current, new: T): T): ConfigBuilder[T] =
+  new result
+  result.dataSources = @[]
+  result.parsers = @[]
+  result.merger = merger
+
